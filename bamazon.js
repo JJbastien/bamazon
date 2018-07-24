@@ -29,38 +29,33 @@ connection.connect(function(err){
 // function which prompts the user for what action they should take
 function start() {
     inquirer
-      .prompt({
+      .prompt([{
         name: "itemToBuy",
-        type: "rawlist",
+        type: "input",
         message: "Which item would you like to buy?",
         choices: ["transormers", "hot wheel", "iphone","samsung phone","samsung tv","nike shoes", "adidas shoes", "under Armour shoes", "the da vinci code", "bible"," angels and demons" ],
+        },{
+            name: "quantity",
+            type : "input",
+            message: "how many would you like to buy?"
+            
+        }])
+    .then(function (answer) {
         
-      })
-      .then(function(answer) {
-        
-        if (answer.choices == true ){
-          sale();
-        }
-        else {
-          noSale();
-        }
-      });
-  }
-  function sale(){
-      inquirer.prompt({
-          type: "input",
-         name: "howmany",
-         message: "how many would you like to buy?",
+        connection.query("SELECT FROM products WHERE itemId" + answer.itemId, function (err, res){
+            var choicePrice = res[0].price;
+            var totalCart = answer.quantity * choicePrice
+            if (res[0].quantity < answers.quantity)
+            {console.log ("insufficient quantity")} 
+            else{
+                connection.query("UPDATE products SET quantity "+ answer.quantity + "WHERE itemId"+ answer.itemId, function (err, res){
+                    console.log("your total is :"  + totalCart);
+  
+       
+                });
+            }
         })
-        .then (function (answer){
-            noSale()
-        }
-  }
-  function noSale(){
-      console.log("insufficient quantity")
-  }
-
+    })
+}
+  
     
-        
-    
-
